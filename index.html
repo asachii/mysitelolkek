@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>STASH — сілтемелеріңіз бір жерде</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='9' fill='%238B5CF6'/><path d='M12 20l8-8M13 11h-1a4 4 0 000 8h1m6-8h1a4 4 0 010 8h-1' stroke='white' stroke-width='2.4' fill='none' stroke-linecap='round'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#101114;--card:#191B20;--card2:#1f2229;--line:#2a2d35;--text:#f1f2f5;--mute:#9a9fab;--acc:#8B5CF6;--acc2:#a78bfa;--accbg:rgba(139,92,246,.14);--danger:#f43f5e;--r:16px;--shadow:0 10px 30px rgba(0,0,0,.35)}
+:root[data-theme="light"]{--bg:#f4f4f8;--card:#ffffff;--card2:#f0eff7;--line:#e2e2ec;--text:#16171c;--mute:#6a6f7d;--accbg:rgba(139,92,246,.12);--shadow:0 10px 30px rgba(40,30,90,.10)}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{font-family:Manrope,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);display:flex;transition:background .25s,color .25s;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+:focus-visible{outline:2px solid var(--acc2);outline-offset:2px}
+.side{width:268px;flex:none;background:var(--card);border-right:1px solid var(--line);padding:20px 14px;display:flex;flex-direction:column;gap:6px;height:100vh;position:sticky;top:0;overflow-y:auto;z-index:30;transition:transform .28s}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;letter-spacing:.5px;padding:4px 10px 18px}
+.logo i{width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,#8B5CF6,#6d3fe0);display:grid;place-items:center;box-shadow:0 6px 18px rgba(139,92,246,.45)}
+.logo svg{width:18px;height:18px}
+.add{background:var(--acc);color:#fff;font-weight:700;border-radius:12px;padding:12px;display:flex;gap:8px;align-items:center;justify-content:center;margin:0 4px 14px;box-shadow:0 8px 20px rgba(139,92,246,.35);transition:transform .15s,filter .15s}
+.add:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.nav{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:11px;color:var(--mute);font-weight:600;font-size:14.5px;width:100%;text-align:left;transition:background .15s,color .15s}
+.nav:hover{background:var(--card2);color:var(--text)}
+.nav.on{background:var(--accbg);color:var(--acc2)}
+.nav .n{margin-left:auto;font-size:12px;background:var(--card2);padding:2px 8px;border-radius:99px}
+.nav.on .n{background:var(--acc);color:#fff}
+.nav .dot{width:9px;height:9px;border-radius:50%;margin:0 4px}
+.sec{font-size:12.5px;color:var(--mute);font-weight:700;padding:16px 12px 6px}
+.sp{flex:1}
+main{flex:1;min-width:0;padding:28px clamp(16px,4vw,48px) 60px;max-width:1280px;margin:0 auto}
+.top{display:none;align-items:center;gap:12px;margin-bottom:18px}
+.ib{width:42px;height:42px;border-radius:12px;background:var(--card);border:1px solid var(--line);display:grid;place-items:center;transition:border-color .15s}
+.ib:hover{border-color:var(--acc)}
+.ib svg{width:19px;height:19px}
+h1{font-size:clamp(28px,4.4vw,44px);font-weight:800;letter-spacing:-.03em;line-height:1.1;max-width:16ch}
+.sub{color:var(--mute);margin:10px 0 24px}
+.stats{display:flex;gap:12px;margin-bottom:22px;flex-wrap:wrap}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px 20px;min-width:150px}
+.stat b{font-size:28px;font-weight:800;display:block}
+.stat span{color:var(--mute);font-size:13px}
+.bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.search{flex:1;min-width:220px;position:relative}
+.search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:18px;color:var(--mute)}
+.search input{width:100%;padding:13px 64px 13px 42px;border-radius:13px;background:var(--card);border:1px solid var(--line)}
+.search kbd{position:absolute;right:12px;top:50%;transform:translateY(-50%);font:600 11px Manrope;color:var(--mute);border:1px solid var(--line);padding:3px 7px;border-radius:7px}
+input,select,textarea{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;width:100%;transition:border-color .15s,box-shadow .15s}
+input:focus,select:focus,textarea:focus{outline:0;border-color:var(--acc);box-shadow:0 0 0 3px var(--accbg)}
+.bar select{width:auto;padding-right:30px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+.chip{padding:7px 14px;border-radius:99px;border:1px solid var(--line);background:var(--card);font-size:13px;font-weight:600;color:var(--mute);transition:.15s}
+.chip:hover{border-color:var(--acc)}
+.chip.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:16px}
+.lc{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:12px;transition:transform .2s,border-color .2s,box-shadow .2s;animation:in .35s both}
+.lc:hover{transform:translateY(-3px);border-color:rgba(139,92,246,.6);box-shadow:var(--shadow)}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.hd{display:flex;gap:12px;align-items:center}
+.fav{width:42px;height:42px;border-radius:12px;background:var(--card2);display:grid;place-items:center;flex:none;overflow:hidden;font-weight:800;color:var(--acc2);font-size:18px}
+.fav img{width:26px;height:26px;border-radius:6px}
+.hd div{min-width:0;flex:1}
+.hd h3{font-size:16px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hd a{color:var(--mute);font-size:12.5px;text-decoration:none;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hd a:hover{color:var(--acc2)}
+.star{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:var(--mute);transition:.15s}
+.star:hover{background:var(--card2)}
+.star.on{color:#fbbf24}
+.star svg{width:19px}
+.desc{color:var(--mute);font-size:14px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:42px}
+.meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.cat{background:var(--accbg);color:var(--acc2);font-size:12px;font-weight:700;padding:4px 10px;border-radius:99px}
+.tag{font-size:12px;color:var(--mute);background:var(--card2);padding:4px 9px;border-radius:99px;cursor:pointer}
+.tag:hover{color:var(--text)}
+.ft{display:flex;align-items:center;gap:4px;margin-top:auto;padding-top:12px;border-top:1px solid var(--line)}
+.ft time{font-size:12px;color:var(--mute);margin-right:auto}
+.ab{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:var(--mute);transition:.15s}
+.ab:hover{background:var(--card2);color:var(--text)}
+.ab.del:hover{color:var(--danger)}
+.ab.open{background:var(--acc);color:#fff;width:auto;padding:0 12px;font-size:13px;font-weight:700;gap:6px;display:flex;align-items:center;text-decoration:none;height:34px;margin-left:4px}
+.ab svg{width:17px}
+.empty{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--mute);background:var(--card);border:1px dashed var(--line);border-radius:var(--r)}
+.empty b{display:block;color:var(--text);font-size:18px;margin-bottom:6px}
+.ov{position:fixed;inset:0;background:rgba(5,5,10,.65);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:16px;z-index:50}
+.ov.show{display:flex}
+.modal{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:24px;width:100%;max-width:480px;max-height:92vh;overflow-y:auto;box-shadow:var(--shadow);animation:pop .22s}
+@keyframes pop{from{opacity:0;transform:scale(.96) translateY(8px)}to{opacity:1;transform:none}}
+.modal h2{font-size:20px;margin-bottom:16px}
+.f{margin-bottom:14px}
+.f label{display:block;font-size:13px;font-weight:600;color:var(--mute);margin-bottom:6px}
+.err{color:var(--danger);font-size:12.5px;margin-top:5px;min-height:0}
+.tagbox{display:flex;flex-wrap:wrap;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px}
+.tagbox:focus-within{border-color:var(--acc);box-shadow:0 0 0 3px var(--accbg)}
+.tagbox input{border:0;background:none;box-shadow:none!important;flex:1;min-width:110px;padding:4px 6px;width:auto}
+.tagbox .tag button{margin-left:4px;color:var(--mute)}
+.row{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;flex-wrap:wrap}
+.btn{padding:11px 20px;border-radius:12px;font-weight:700;background:var(--card2);border:1px solid var(--line)}
+.btn:hover{border-color:var(--acc)}
+.btn.p{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.d{background:var(--danger);border-color:var(--danger);color:#fff}
+.set{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
+.set small{display:block;color:var(--mute);margin-top:2px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,30px);background:var(--card2);border:1px solid var(--acc);padding:12px 20px;border-radius:13px;font-weight:600;font-size:14px;opacity:0;pointer-events:none;transition:.3s;z-index:90;box-shadow:var(--shadow)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.scrim{display:none}
+@media(max-width:860px){
+.side{position:fixed;left:0;top:0;transform:translateX(-100%)}
+.side.open{transform:none}
+.scrim.show{display:block;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:20}
+.top{display:flex}
+.grid{grid-template-columns:1fr}
+.bar select{flex:1}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<aside class="side" id="side">
+  <div class="logo"><i><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M9 15l6-6M10 7H9a5 5 0 000 10h1m4-10h1a5 5 0 010 10h-1"/></svg></i>STASH</div>
+  <button class="add" id="addBtn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Сілтеме қосу</button>
+  <button class="nav" data-v="all">Барлық сілтемелер<span class="n" id="nAll"></span></button>
+  <button class="nav" data-v="fav">Таңдаулылар<span class="n" id="nFav"></span></button>
+  <button class="nav" data-v="recent">Соңғы қосылғандар</button>
+  <div class="sec">Категориялар</div>
+  <div id="cats"></div>
+  <div class="sp"></div>
+  <button class="nav" id="setBtn">Баптаулар</button>
+</aside>
+<div class="scrim" id="scrim"></div>
+
+<main>
+  <div class="top">
+    <button class="ib" id="burger" aria-label="Мәзір"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <b style="font-size:18px">STASH</b>
+  </div>
+  <h1 id="title">Барлық сілтемелеріңіз бір жерде</h1>
+  <p class="sub">Пайдалы сайттарды сақтаңыз, реттеңіз және керек кезде тез табыңыз.</p>
+  <div class="stats">
+    <div class="stat"><b id="sTotal">0</b><span>Сақталған сілтеме</span></div>
+    <div class="stat"><b id="sFav">0</b><span>Таңдаулы</span></div>
+  </div>
+  <div class="bar">
+    <div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="q" placeholder="Атауы, URL, сипаттамасы немесе тегі бойынша іздеу" autocomplete="off"><kbd>Ctrl K</kbd></div>
+    <select id="sort" aria-label="Сұрыптау">
+      <option value="new">Жаңадан ескіге</option>
+      <option value="old">Ескіден жаңаға</option>
+      <option value="az">Әліпби бойынша</option>
+    </select>
+  </div>
+  <div class="chips" id="chips"></div>
+  <div class="grid" id="grid"></div>
+</main>
+
+<div class="ov" id="ovForm"><form class="modal" id="form" novalidate>
+  <h2 id="fTitle">Сілтеме қосу</h2>
+  <div class="f"><label for="fUrl">URL мекенжайы</label><input id="fUrl" placeholder="https://example.com" autocomplete="off"><div class="err" id="eUrl"></div></div>
+  <div class="f"><label for="fName">Сайт атауы</label><input id="fName" placeholder="Мысалы: GitHub"><div class="err" id="eName"></div></div>
+  <div class="f"><label for="fDesc">Қысқаша сипаттамасы</label><textarea id="fDesc" rows="2" placeholder="Бұл сайт не үшін керек?"></textarea></div>
+  <div class="f"><label for="fCat">Категория</label><select id="fCat"></select></div>
+  <div class="f"><label>Тегтер</label><div class="tagbox" id="tagbox"><input id="tagIn" placeholder="Тег жазып, Enter басыңыз"></div></div>
+  <div class="row"><button type="button" class="btn" id="fCancel">Болдырмау</button><button type="submit" class="btn p">Сақтау</button></div>
+</form></div>
+
+<div class="ov" id="ovDel"><div class="modal">
+  <h2>Сілтемені өшіру</h2><p style="color:var(--mute)" id="delTxt"></p>
+  <div class="row"><button class="btn" id="delNo">Болдырмау</button><button class="btn d" id="delYes">Өшіру</button></div>
+</div></div>
+
+<div class="ov" id="ovSet"><div class="modal">
+  <h2>Баптаулар</h2>
+  <div class="set"><div>Жарық режимі<small>Қараңғы және жарық тақырыптар</small></div><button class="btn" id="themeBtn">Ауыстыру</button></div>
+  <div class="set"><div>Экспорт<small>Барлық сілтемені JSON файлына жүктеу</small></div><button class="btn" id="expBtn">Экспорттау</button></div>
+  <div class="set" style="border:0"><div>Импорт<small>JSON файлынан сілтемелерді қосу</small></div><button class="btn" id="impBtn">Импорттау</button></div>
+  <input type="file" id="file" accept=".json,application/json" hidden>
+  <div class="row"><button class="btn p" id="setClose">Жабу</button></div>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+(()=>{
+const KEY='linkbox.links.v1',TKEY='linkbox.theme';
+const CATS=[['Бағдарламалау','#8B5CF6'],['Дизайн','#ec4899'],['Музыка','#22c55e'],['Білім','#3b82f6'],['Ойын-сауық','#f59e0b'],['Басқа','#94a3b8']];
+const $=s=>document.querySelector(s);
+const ST={view:'all',cat:'',q:'',sort:'new',edit:null,tags:[],del:null};
+let links=[];
+
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const IC={
+ star:'<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg>',
+ edit:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16zM13.5 6.5l4 4"/></svg>',
+ del:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>',
+ copy:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 012-2h9"/></svg>',
+ ext:'<svg viewBox="0 0 24 24" width="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 01-1 1H5a1 1 0 01-1-1V7a1 1 0 011-1h5"/></svg>'
+};
+
+/* ---------- storage ---------- */
+function save(){try{localStorage.setItem(KEY,JSON.stringify(links))}catch(e){toast('Сақтау мүмкін болмады')}}
+function load(){
+  let raw=null;try{raw=localStorage.getItem(KEY)}catch(e){}
+  if(raw===null){
+    const d=Date.now(),day=864e5;
+    links=[
+      ['https://github.com','GitHub','Код жазу, жобаларды сақтау және бірлесіп жұмыс істеу платформасы.','Бағдарламалау',['код','git'],6],
+      ['https://developer.mozilla.org','MDN Web Docs','Веб-технологиялар бойынша ең толық анықтамалық.','Бағдарламалау',['html','css','js'],5],
+      ['https://www.figma.com','Figma','Интерфейс пен прототиптерді браузерде жобалау құралы.','Дизайн',['ui','прототип'],4],
+      ['https://open.spotify.com','Spotify','Музыка мен подкасттарды тыңдау сервисі.','Музыка',['плейлист'],3],
+      ['https://www.khanacademy.org','Khan Academy','Тегін онлайн сабақтар: математика, ғылым, бағдарламалау.','Білім',['курс','тегін'],2],
+      ['https://www.youtube.com','YouTube','Видео сабақтар мен ойын-сауық мазмұны.','Ойын-сауық',['видео'],1]
+    ].map((a,i)=>({id:uid(),url:a[0],name:a[1],desc:a[2],cat:a[3],tags:a[4],fav:i<2,added:d-a[5]*day}));
+    save();
+  }else{try{links=JSON.parse(raw)||[]}catch(e){links=[]}}
+}
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+
+/* ---------- url helpers ---------- */
+function normUrl(v){
+  v=(v||'').trim();if(!v)return null;
+  if(!/^https?:\/\//i.test(v)){if(/^[a-z][a-z0-9+.-]*:/i.test(v)&&!/^[^/]+:\d+/.test(v))return null;v='https://'+v}
+  try{const u=new URL(v);if(!/^https?:$/.test(u.protocol))return null;
+    if(!/^[^\s.]+(\.[^\s.]+)+$/.test(u.hostname)&&u.hostname!=='localhost')return null;
+    return u.href}catch(e){return null}
+}
+const key=u=>{try{const x=new URL(u);return x.hostname.replace(/^www\./,'').toLowerCase()+x.pathname.replace(/\/+$/,'')+x.search+x.hash}catch(e){return u}};
+const host=u=>{try{return new URL(u).hostname.replace(/^www\./,'')}catch(e){return u}};
+const guessName=u=>{const h=host(u).split('.');const n=h.length>1?h[h.length-2]:h[0];return n.charAt(0).toUpperCase()+n.slice(1)};
+const fmt=t=>new Date(t).toLocaleDateString('kk-KZ',{day:'numeric',month:'short',year:'numeric'});
+
+/* ---------- toast / theme ---------- */
+let tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2200)}
+function theme(t){document.documentElement.dataset.theme=t;try{localStorage.setItem(TKEY,t)}catch(e){}}
+
+/* ---------- render ---------- */
+function visible(){
+  let a=links.slice();
+  if(ST.view==='fav')a=a.filter(l=>l.fav);
+  if(ST.view==='recent')a=a.filter(l=>Date.now()-l.added<7*864e5);
+  if(ST.cat)a=a.filter(l=>l.cat===ST.cat);
+  const q=ST.q.trim().toLowerCase();
+  if(q)a=a.filter(l=>[l.name,l.url,l.desc,...(l.tags||[])].join(' ').toLowerCase().includes(q));
+  if(ST.sort==='new'||ST.view==='recent')a.sort((x,y)=>y.added-x.added);
+  else if(ST.sort==='old')a.sort((x,y)=>x.added-y.added);
+  else a.sort((x,y)=>x.name.localeCompare(y.name,'kk'));
+  return a;
+}
+function render(){
+  $('#sTotal').textContent=links.length;
+  const fc=links.filter(l=>l.fav).length;
+  $('#sFav').textContent=fc;$('#nAll').textContent=links.length;$('#nFav').textContent=fc;
+  document.querySelectorAll('.nav[data-v]').forEach(b=>b.classList.toggle('on',b.dataset.v===ST.view&&!ST.cat));
+  $('#cats').innerHTML=CATS.map(([c,col])=>`<button class="nav${ST.cat===c?' on':''}" data-c="${c}"><span class="dot" style="background:${col}"></span>${c}<span class="n">${links.filter(l=>l.cat===c).length}</span></button>`).join('');
+  $('#chips').innerHTML=['',...CATS.map(c=>c[0])].map(c=>`<button class="chip${ST.cat===c?' on':''}" data-c="${c}">${c||'Барлығы'}</button>`).join('');
+  $('#title').textContent=ST.cat||({all:'Барлық сілтемелеріңіз бір жерде',fav:'Таңдаулылар',recent:'Соңғы қосылғандар'})[ST.view];
+  const a=visible();
+  $('#grid').innerHTML=a.length?a.map(card).join(''):`<div class="empty"><b>${links.length?'Ештеңе табылмады':'Әзірге сілтеме жоқ'}</b>${links.length?'Іздеу сөзін немесе сүзгіні өзгертіп көріңіз.':'«Сілтеме қосу» батырмасын басып, алғашқы сайтты сақтаңыз.'}</div>`;
+}
+function card(l,i){
+  const h=host(l.url);
+  return `<article class="lc" style="animation-delay:${Math.min(i,10)*30}ms" data-id="${l.id}">
+  <div class="hd"><div class="fav"><img src="https://www.google.com/s2/favicons?domain=${encodeURIComponent(h)}&sz=64" alt="" loading="lazy" onerror="this.parentNode.textContent='${esc(l.name.charAt(0).toUpperCase()).replace(/'/g,'')}'"></div>
+  <div><h3>${esc(l.name)}</h3><a href="${esc(l.url)}" target="_blank" rel="noopener noreferrer">${esc(h)}</a></div>
+  <button class="star${l.fav?' on':''}" data-a="fav" aria-label="Таңдаулыларға қосу">${IC.star}</button></div>
+  <p class="desc">${esc(l.desc||'Сипаттама жоқ')}</p>
+  <div class="meta"><span class="cat">${esc(l.cat)}</span>${(l.tags||[]).map(t=>`<span class="tag" data-a="tag" data-t="${esc(t)}">#${esc(t)}</span>`).join('')}</div>
+  <div class="ft"><time>${fmt(l.added)}</time>
+  <button class="ab" data-a="copy" aria-label="Көшіру" title="Көшіру">${IC.copy}</button>
+  <button class="ab" data-a="edit" aria-label="Өңдеу" title="Өңдеу">${IC.edit}</button>
+  <button class="ab del" data-a="del" aria-label="Өшіру" title="Өшіру">${IC.del}</button>
+  <a class="ab open" href="${esc(l.url)}" target="_blank" rel="noopener noreferrer">Ашу ${IC.ext}</a></div></article>`;
+}
+
+/* ---------- form ---------- */
+function drawTags(){
+  const b=$('#tagbox');b.querySelectorAll('.tag').forEach(x=>x.remove());
+  ST.tags.forEach((t,i)=>{const s=document.createElement('span');s.className='tag';s.innerHTML=`#${esc(t)}<button type="button" data-i="${i}" aria-label="Жою">×</button>`;b.insertBefore(s,$('#tagIn'))});
+}
+function addTag(){const v=$('#tagIn').value.trim().replace(/^#/,'').replace(/,/g,'').slice(0,24);
+  if(v&&!ST.tags.includes(v)&&ST.tags.length<8)ST.tags.push(v);$('#tagIn').value='';drawTags()}
+function openForm(l){
+  ST.edit=l?l.id:null;ST.tags=l?[...(l.tags||[])]:[];
+  $('#fTitle').textContent=l?'Сілтемені өңдеу':'Сілтеме қосу';
+  $('#fCat').innerHTML=CATS.map(c=>`<option>${c[0]}</option>`).join('');
+  $('#fUrl').value=l?l.url:'';$('#fName').value=l?l.name:'';$('#fDesc').value=l?l.desc:'';
+  $('#fCat').value=l?l.cat:(ST.cat||'Басқа');
+  $('#eUrl').textContent=$('#eName').textContent='';
+  drawTags();$('#ovForm').classList.add('show');closeSide();setTimeout(()=>$('#fUrl').focus(),50);
+}
+const close=id=>$(id).classList.remove('show');
+$('#form').addEventListener('submit',e=>{
+  e.preventDefault();
+  const url=normUrl($('#fUrl').value),name=$('#fName').value.trim();
+  $('#eUrl').textContent=$('#eName').textContent='';let bad=false;
+  if(!$('#fUrl').value.trim()){$('#eUrl').textContent='URL енгізіңіз';bad=true}
+  else if(!url){$('#eUrl').textContent='URL қате. Мысалы: https://example.com';bad=true}
+  else if(links.some(l=>l.id!==ST.edit&&key(l.url)===key(url))){$('#eUrl').textContent='Бұл сілтеме бұрыннан сақталған';bad=true}
+  if(!name){$('#eName').textContent='Сайт атауын енгізіңіз';bad=true}
+  if(bad)return;
+  addTag();
+  const data={url,name,desc:$('#fDesc').value.trim(),cat:$('#fCat').value,tags:[...ST.tags]};
+  if(ST.edit){Object.assign(links.find(l=>l.id===ST.edit),data);toast('Өзгерістер сақталды')}
+  else{links.push({id:uid(),fav:false,added:Date.now(),...data});toast('Сілтеме қосылды')}
+  save();render();close('#ovForm');
+});
+$('#fUrl').addEventListener('blur',()=>{const u=normUrl($('#fUrl').value);if(u&&!$('#fName').value.trim())$('#fName').value=guessName(u)});
+$('#tagIn').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===','){e.preventDefault();addTag()}else if(e.key==='Backspace'&&!e.target.value){ST.tags.pop();drawTags()}});
+$('#tagbox').addEventListener('click',e=>{const b=e.target.closest('button');if(b){ST.tags.splice(+b.dataset.i,1);drawTags()}else $('#tagIn').focus()});
+$('#fCancel').onclick=()=>close('#ovForm');
+
+/* ---------- card actions ---------- */
+$('#grid').addEventListener('click',e=>{
+  const el=e.target.closest('[data-a]');if(!el)return;
+  const id=el.closest('.lc')?.dataset.id,l=links.find(x=>x.id===id);
+  const a=el.dataset.a;
+  if(a==='tag'){$('#q').value=ST.q=el.dataset.t;render();return}
+  if(!l)return;
+  if(a==='fav'){l.fav=!l.fav;save();render();toast(l.fav?'Таңдаулыларға қосылды':'Таңдаулылардан алынды')}
+  if(a==='edit')openForm(l);
+  if(a==='del'){ST.del=id;$('#delTxt').textContent=`«${l.name}» сілтемесін өшіргіңіз келетініне сенімдісіз бе?`;$('#ovDel').classList.add('show')}
+  if(a==='copy'){(navigator.clipboard?navigator.clipboard.writeText(l.url):Promise.reject()).then(()=>toast('Сілтеме көшірілді')).catch(()=>{const t=document.createElement('textarea');t.value=l.url;document.body.append(t);t.select();try{document.execCommand('copy');toast('Сілтеме көшірілді')}catch(x){toast('Көшіру мүмкін болмады')}t.remove()})}
+});
+$('#delNo').onclick=()=>close('#ovDel');
+$('#delYes').onclick=()=>{links=links.filter(l=>l.id!==ST.del);save();render();close('#ovDel');toast('Сілтеме өшірілді')};
+
+/* ---------- nav / search ---------- */
+function closeSide(){$('#side').classList.remove('open');$('#scrim').classList.remove('show')}
+document.addEventListener('click',e=>{
+  const n=e.target.closest('.nav[data-v]');if(n){ST.view=n.dataset.v;ST.cat='';render();closeSide()}
+  const c=e.target.closest('[data-c]');if(c){ST.cat=c.dataset.c;if(c.classList.contains('nav'))ST.view='all';render();closeSide()}
+});
+$('#addBtn').onclick=()=>openForm();
+$('#burger').onclick=()=>{$('#side').classList.add('open');$('#scrim').classList.add('show')};
+$('#scrim').onclick=closeSide;
+$('#q').addEventListener('input',e=>{ST.q=e.target.value;render()});
+$('#sort').addEventListener('change',e=>{ST.sort=e.target.value;render()});
+document.addEventListener('keydown',e=>{
+  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();$('#q').focus();$('#q').select()}
+  if(e.key==='Escape'){document.querySelectorAll('.ov.show').forEach(o=>o.classList.remove('show'));closeSide()}
+});
+document.querySelectorAll('.ov').forEach(o=>o.addEventListener('mousedown',e=>{if(e.target===o)o.classList.remove('show')}));
+
+/* ---------- settings ---------- */
+$('#setBtn').onclick=()=>{$('#ovSet').classList.add('show');closeSide()};
+$('#setClose').onclick=()=>close('#ovSet');
+$('#themeBtn').onclick=()=>{theme(document.documentElement.dataset.theme==='light'?'dark':'light');toast('Тақырып ауыстырылды')};
+$('#expBtn').onclick=()=>{
+  const b=new Blob([JSON.stringify(links,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='stash-export.json';a.click();URL.revokeObjectURL(a.href);toast('Экспорт аяқталды');
+};
+$('#impBtn').onclick=()=>$('#file').click();
+$('#file').addEventListener('change',e=>{
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const arr=JSON.parse(r.result);if(!Array.isArray(arr))throw 0;
+      let add=0;
+      arr.forEach(x=>{
+        const u=normUrl(x&&x.url);if(!u||links.some(l=>key(l.url)===key(u)))return;
+        links.push({id:uid(),url:u,name:String(x.name||guessName(u)).slice(0,80),desc:String(x.desc||'').slice(0,300),
+          cat:CATS.some(c=>c[0]===x.cat)?x.cat:'Басқа',tags:Array.isArray(x.tags)?x.tags.map(String).slice(0,8):[],fav:!!x.fav,added:+x.added||Date.now()});
+        add++;
+      });
+      save();render();toast(`Импортталды: ${add} сілтеме`);
+    }catch(err){toast('Файл форматы қате')}
+    e.target.value='';
+  };
+  r.readAsText(f);
+});
+
+/* ---------- init ---------- */
+let t0='dark';try{t0=localStorage.getItem(TKEY)||'dark'}catch(e){}
+theme(t0);load();render();
+})();
+</script>
+</body>
+</html>
